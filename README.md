@@ -295,10 +295,10 @@ EIGHTH QUERY OPTIMIZATION:
 |First Query	      |`5.1 ms`     ||
 |Second Query	      |`32.6 ms`    ||
 |Third Query          |`25.1 ms`    |`6.2 ms`|The time execution decrease is 75.3%
-|Fourth Query         |`35.6 ms`    |`5.7 ms`|The time execution decrease is 83.1%
-|Fifth Query	      |`1.9 ms`     |`30.8 ms`| The time execution decrease is 57.9%
-|Sixth Query	      |`4.9 ms`     |`30.8 ms`| The time execution decrease is 81.6%
-|Seventh Query	      |`90 ms`      |`30.8 ms`| The time execution decrease is 98.9%
-|Eighth Query	      |`16 ms`      |`30.8 ms`| The time execution decrease is 87.5%
-|Ninth Query          |`162 ms`     |`3 ms`|The time execution decrease is 97.5%
-|Tenth Query          |`30 ms`      |`5.2 ms`|The time execution decrease is 82%
+|Fourth Query         |`35.6 ms`    |`6 ms`|The time execution decrease is 83.1%
+|Fifth Query	      |`1.9 ms`     |`0.8 ms`| The time execution decrease is 57.9%
+|Sixth Query	      |`4.9 ms`     |`0.9 ms`| The time execution decrease is 81.6%
+|Seventh Query	      |`90 ms`      |`1 ms`| The time execution decrease is 98.9%
+|Eighth Query	      |`16 ms`      |`2 ms`| The time execution decrease is 87.5%
+|Ninth Query          |`162 ms`     |`4 ms`|The time execution decrease is 97.5%
+|Tenth Query          |`30 ms`      |`5.4 ms`|The time execution decrease is 82%
