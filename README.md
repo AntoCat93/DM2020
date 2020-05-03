@@ -260,7 +260,7 @@ SIXTH QUERY OPTIMIZATION:
 
 	CREATE VIEW draft_first_3_nba (draftYear, draftFrom, draftOverall, tmID, playerID) AS SELECT draftYear, draftFrom, draftOverall, tmID, playerID FROM draft WHERE league_id = 1 AND draftOverall BETWEEN 1 AND 3;
 
-	SELECT draftFrom,  count(1) as times FROM draft_first_3_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
+	SELECT SQL_NO_CACHE draftFrom,  count(1) as times FROM draft_first_3_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
 
 Adding a view is not a good optimization in MYSQL, because the view is run every time the view is referenced in a query. In fact there's no optimization. So we created a table (an alternative in PostegreSQL should be a materiliazed view), with the same columns of the the view:
 
@@ -274,7 +274,7 @@ Adding a view is not a good optimization in MYSQL, because the view is run every
 
 	INSERT INTO draft_first_three_nba  SELECT draftYear, draftFrom, draftOverall, tmID, playerID FROM draft WHERE league_id = 1 AND draftOverall BETWEEN 1 AND 3;
 
-	SELECT draftFrom,  count(1) as times FROM draft_first_three_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
+	SELECT SQL_NO_CACHE draftFrom,  count(1) as times FROM draft_first_three_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
 
 EIGHTH QUERY OPTIMIZATION:
 
@@ -284,7 +284,7 @@ EIGHTH QUERY OPTIMIZATION:
 
 	UPDATE players_teams pt INNER JOIN teams t ON (t.code = pt.tmID) SET pt.team_id = t.id;
 
-	SELECT p.firstName as name, p.lastName as last_name, round(avg(pt.points),2) as avg_point, count(1) as num_seasons FROM players as p INNER JOIN players_teams as pt ON pt.playerID = p.playerID INNER JOIN teams as t ON (pt.team_id = t.id) WHERE pt.year BETWEEN 1990 AND 1999 AND t.name = 'Los Angeles Lakers' group by p.playerID, p.firstName, p.lastName;
+	SELECT SQL_NO_CACHE p.firstName as name, p.lastName as last_name, round(avg(pt.points),2) as avg_point, count(1) as num_seasons FROM players as p INNER JOIN players_teams as pt ON pt.playerID = p.playerID INNER JOIN teams as t ON (pt.team_id = t.id) WHERE pt.year BETWEEN 1990 AND 1999 AND t.name = 'Los Angeles Lakers' group by p.playerID, p.firstName, p.lastName;
 
 
 
