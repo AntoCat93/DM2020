@@ -9,11 +9,11 @@ The database original structure was composed by:
 **Count of rows**: 43,787
 **Count of columns**: 195
 
-We created other tables, modified some existing tables and deleted all the indexes and constraints except the primary keys.  
-This is the final structure of the database: 
-#link here of er-diagram~~
+This was the structure of the database: 
+https://github.com/AntoCat93/DM2020/blob/master/er_diagram.png
 
-
+We created other tables, modified some existing tables and deleted all the indexes and constraints except the primary keys.
+In the following paragraph all the changes we did in order to update our database, before starting create queries.
 
 ## INITIAL UPDATES
 
