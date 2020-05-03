@@ -241,7 +241,7 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 
 #FINAL COMMENT HERE
 
-## OPTIMIZATION
+## OPTIMIZATION (HOMEWORK 2)
 
 #SOMETHING HERE
 
@@ -249,15 +249,56 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	ALTER TABLE `players_teams` ADD FOREIGN KEY (playerID) REFERENCES players(playerID);
 	ALTER TABLE `teams` ADD UNIQUE INDEX `UK_team_code` (`code`);
 	ALTER TABLE `players_teams` ADD INDEX `K_year` (`year`);
+	ALTER TABLE `awards_players` ADD INDEX `K_award_id` (`award_id`);
+	ALTER TABLE `awards_coaches` ADD INDEX `K_award_id` (`award_id`);
+	ALTER TABLE `awards_players` CHANGE `award_id` `award_id` INT(11)  UNSIGNED  NOT NULL;
+	ALTER TABLE awards_players ADD FOREIGN KEY (award_id) REFERENCES awards(id);
+	ALTER TABLE awards_coaches CHANGE `award_id` `award_id` INT(11)  UNSIGNED  NOT NULL;
+	ALTER TABLE awards_coaches ADD FOREIGN KEY (award_id) REFERENCES awards(id);
+	
+SIXTH QUERY OPTIMIZATION:
 
-### FIRST OPTIMIZATION RESULTS
+	CREATE VIEW draft_first_3_nba (draftYear, draftFrom, draftOverall, tmID, playerID) AS SELECT draftYear, draftFrom, draftOverall, tmID, playerID FROM draft WHERE league_id = 1 AND draftOverall BETWEEN 1 AND 3;
+
+	SELECT draftFrom,  count(1) as times FROM draft_first_3_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
+
+Adding a view is not a good optimization in MYSQL, because the view is run every time the view is referenced in a query. In fact there's no optimization. So we created a table (an alternative in PostegreSQL should be a materiliazed view), with the same columns of the the view:
+
+	CREATE TABLE draft_first_three_nba (
+	draftYear INT, 
+	draftFrom VARCHAR(50), 
+	draftOverall INT, 
+	tmID VARCHAR(3), 
+	playerID VARCHAR(20)
+	);
+
+	INSERT INTO draft_first_three_nba  SELECT draftYear, draftFrom, draftOverall, tmID, playerID FROM draft WHERE league_id = 1 AND draftOverall BETWEEN 1 AND 3;
+
+	SELECT draftFrom,  count(1) as times FROM draft_first_three_NBA WHERE draftFrom IS NOT NULL GROUP BY draftFrom ORDER BY times DESC;
+
+EIGHTH QUERY OPTIMIZATION:
+
+	ALTER TABLE `players_teams` ADD `team_id` INT  NULL  DEFAULT NULL  AFTER `tmID`;
+	ALTER TABLE `players_teams` ADD INDEX `K_team` (`team_id`);
+	ALTER TABLE `players_teams` ADD CONSTRAINT `FK_players_teams_teams` FOREIGN KEY (`team_id`) REFERENCES `teams` (`id`);
+
+	UPDATE players_teams pt INNER JOIN teams t ON (t.code = pt.tmID) SET pt.team_id = t.id;
+
+	SELECT p.firstName as name, p.lastName as last_name, round(avg(pt.points),2) as avg_point, count(1) as num_seasons FROM players as p INNER JOIN players_teams as pt ON pt.playerID = p.playerID INNER JOIN teams as t ON (pt.team_id = t.id) WHERE pt.year BETWEEN 1990 AND 1999 AND t.name = 'Los Angeles Lakers' group by p.playerID, p.firstName, p.lastName;
+
+
+
+### OPTIMIZATION RESULTS
 
 |                     |Before       |After         |Result|
 |---------------------|-------------|--------------|---------------|
+|First Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
 |Second Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
 |Third Query          |`27.1 ms`    |`6.3 ms`|The time execution decrease is 76%
 |Fourth Query         |`28 ms`    |`5.7 ms`|The time execution decrease is 79.6%
+|Fifth Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
+|Sixth Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
+|Seventh Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
+|Eighth Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
 |Ninth Query          |`179 ms`    |`3 ms`|The time execution decrease is 98.3%
 |Tenth Query          |`25.4`    |`5.2 ms`|The time execution decrease is 79.5%
-
-
