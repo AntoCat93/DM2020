@@ -1,6 +1,6 @@
 ﻿# American Basketball
 
-We chose a database with all American basketball data from 1956 to 2011. 
+We chose a database with all American basketball data from 1937 to 2011. 
 This is the source of the database: [https://relational.fit.cvut.cz/dataset/BasketballMen](https://relational.fit.cvut.cz/dataset/BasketballMen) 
 
 The database original structure was composed by:
