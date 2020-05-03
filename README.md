@@ -109,18 +109,18 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 
 #### *1. How many NBA All-Star Game Appearances for each player?*
 
-    SELECT p.useFirst AS name, 
+    SELECT SQL_NO_CACHE p.useFirst AS name, 
     p.lastName AS last_name, 
     COUNT(pa.season_id) AS total_frequencies 
     FROM players p INNER JOIN player_allstar pa ON (p.playerID = pa.playerID) 
     WHERE pa.league_id = 1 GROUP BY p.playerID ORDER BY total_frequencies DESC;
 
-> **Execution time:** 5.9 ms
+> **Execution time:** 5.1 ms
 
 
 #### *2. Top 10 players with highest field goal rates in the new millennium*
 
-    SELECT p.useFirst AS name,
+    SELECT SQL_NO_CACHE p.useFirst AS name,
      p.lastName AS last_name, 
      (sum(pt.fgMade)/sum(pt.fgAttempted))*100 AS rate_field_goal 
      FROM players p INNER JOIN players_teams pt ON (p.playerId= pt.playerId) 
@@ -128,11 +128,11 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
      GROUP BY p.playerID 
      HAVING sum(minutes) >1000 ORDER BY  rate_field_goal DESC LIMIT 10;
      
-> **Execution time:** 46.6 ms
+> **Execution time:** 32.6 ms
 
 #### *3. Top 50 players with highest points-per-game in the last year (showing points-per-game, rebounds-per-game, assists-per-game)*
 
-	SELECT  p.useFirst as name, 
+	SELECT SQL_NO_CACHE p.useFirst as name, 
 	 p.lastName as last_name,
 	 ROUND(sum(pt.points)/sum(pt.GP), 2) as pnts_per_game,
 	 ROUND(sum(pt.assists)/sum(pt.GP), 2) as assts_per_game, 
@@ -141,11 +141,11 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	 WHERE pt.year = (SELECT MAX(year) FROM players_teams) 
 	 GROUP BY p.playerID 
 	 ORDER BY pnts_per_game DESC LIMIT 50;
-> **Execution time:** 27.1 ms
+> **Execution time:** 25.1 ms
 
 #### *4. Who are the best of the normal ? (same as before, but only among players who have never been selected for the All-Star Game)*
 
-	SELECT  p.useFirst as name,
+	SELECT SQL_NO_CACHE p.useFirst as name,
 	 p.lastName as last_name,
 	 ROUND(sum(pt.points)/sum(pt.GP), 2) as pnts_per_game,
 	 ROUND(sum(pt.assists)/sum(pt.GP), 2) as assts_per_game, ROUND(sum(pt.rebounds)/sum(pt.GP), 2) as rbnds_per_game 
@@ -157,10 +157,10 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	 ORDER BY pnts_per_game DESC 
 	 LIMIT 50;
 	 
-> **Execution time:** 28 ms
+> **Execution time:** 35.6 ms
 
 #### *5. Top 10 smallest players to win MVP title ( and how many times they won it )*
-	SELECT IFNULL(p.useFirst, p.firstName) AS name, 
+	SELECT SQL_NO_CACHE IFNULL(p.useFirst, p.firstName) AS name, 
 	p.lastName AS last_name, 
 	p.height AS height_inches, 
 	ROUND(p.height*0.0254, 2) AS height_metres, 
@@ -178,7 +178,7 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 
 #### *6. Major draft source for the first 3 picks*
 
-    SELECT draftFrom,  
+    SELECT SQL_NO_CACHE draftFrom,  
     COUNT(1) AS times 
     FROM draft 
     WHERE draftOverall < 4 
@@ -191,18 +191,18 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 
 #### *7. Coaches who won some awards as coaches but not as players* 
 
-    SELECT DISTINCT p.useFirst AS name, 
+    SELECT SQL_NO_CACHE DISTINCT p.useFirst AS name, 
     p.lastName 
     FROM players p 
     INNER JOIN players_teams pt ON (p.playerID = pt.playerID)
     WHERE p.playerID IN (SELECT coachID FROM awards_coaches) 
     AND p.playerID NOT IN (SELECT playerID FROM awards_players);
 	
-> **Execution time:** 84 ms
+> **Execution time:** 90 ms
 
 #### *8. 90s Lakers players with average points per season and number of seasons*
 
-    SELECT p.firstName AS name, 
+    SELECT SQL_NO_CACHE p.firstName AS name, 
     p.lastName AS last_name, 
     ROUND(AVG(pt.points),2) AS avg_point, 
     COUNT(1) AS num_seasons 
@@ -212,11 +212,11 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
     WHERE pt.year BETWEEN 1990 AND 1999 
     AND t.name = 'Los Angeles Lakers' 
     GROUP BY p.playerID, p.firstName, p.lastName;
-> **Execution time:** 13.9 ms
+> **Execution time:** 16 ms
 
 
 #### *9. What teams has Shaq played for?*
-	SELECT DISTINCT t.name
+	SELECT SQL_NO_CACHE DISTINCT t.name
 	FROM players AS p 
 	INNER JOIN players_teams AS pt ON (p.playerID = pt.playerID) 
 	INNER JOIN teams AS t ON (pt.tmID = t.code) 
@@ -224,11 +224,11 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	AND pt.tmID = t.code 
 	AND p.firstName="Shaquille" 
 	AND p.lastName = "O'Neal";
-> **Execution time:** 179 ms
+> **Execution time:** 162 ms
 
 
 #### *10. What coaches did Lebron James have?*
-	SELECT DISTINCT p_coach.firstName AS name, 
+	SELECT SQL_NO_CACHE DISTINCT p_coach.firstName AS name, 
 	p_coach.lastName AS last_name 
 	FROM players p_coach 
 	INNER JOIN coaches c ON (c.coachID = p_coach.playerID) 
@@ -236,12 +236,12 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	INNER JOIN players p_player ON (pt.playerID = p_player.playerID) 
 	WHERE p_player.firstName = 'Lebron' AND p_player.lastName = 'James';
 
-> **Execution time:** 25.4 ms
+> **Execution time:** 30 ms
 
 
 #FINAL COMMENT HERE
 
-## OPTIMIZATION (HOMEWORK 2)
+## **OPTIMIZATION (HOMEWORK 2)**
 
 #SOMETHING HERE
 
@@ -292,7 +292,7 @@ EIGHTH QUERY OPTIMIZATION:
 
 |                     |Before       |After         |Result|
 |---------------------|-------------|--------------|---------------|
-|First Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
+|First Query	      |`5.1 ms`    |`30.8 ms`| The time execution decrease is 33.9%
 |Second Query	      |`46.6 ms`    |`30.8 ms`| The time execution decrease is 33.9%
 |Third Query          |`27.1 ms`    |`6.3 ms`|The time execution decrease is 76%
 |Fourth Query         |`28 ms`    |`5.7 ms`|The time execution decrease is 79.6%
