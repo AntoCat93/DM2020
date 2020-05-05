@@ -239,11 +239,7 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 > **Execution time:** 30 ms
 
 
-#FINAL COMMENT HERE
-
 ## **OPTIMIZATION (HOMEWORK 2)**
-
-#SOMETHING HERE
 
 	ALTER TABLE `players_teams` ADD INDEX `players_teams_players` (`playerID`);
 	ALTER TABLE `players_teams` ADD FOREIGN KEY (playerID) REFERENCES players(playerID);
@@ -255,6 +251,10 @@ So we ran 10 very interesting queries in our opinion, trying to touch all the to
 	ALTER TABLE awards_players ADD FOREIGN KEY (award_id) REFERENCES awards(id);
 	ALTER TABLE awards_coaches CHANGE `award_id` `award_id` INT(11)  UNSIGNED  NOT NULL;
 	ALTER TABLE awards_coaches ADD FOREIGN KEY (award_id) REFERENCES awards(id);
+	ALTER TABLE `players` ADD INDEX `K_player_name` (`firstName`, `lastName`); 
+	ALTER TABLE `coaches` ADD INDEX `K_coach_id` (`coachID`);
+	ALTER TABLE `coaches` ADD INDEX `K_team_year` (`tmID`, `year`);
+	UPDATE players_teams pt SET pt.fgMade = 0, pt.fgAttempted = 0 WHERE  pt.fgMade > pt.fgAttempted;
 	
 SIXTH QUERY OPTIMIZATION:
 
@@ -293,12 +293,12 @@ EIGHTH QUERY OPTIMIZATION:
 |                     |Before       |After         |Result|
 |---------------------|-------------|--------------|---------------|
 |First Query	      |`5.1 ms`     ||
-|Second Query	      |`32.6 ms`    ||
-|Third Query          |`25.1 ms`    |`6.2 ms`|The time execution decrease is 75.3%
-|Fourth Query         |`35.6 ms`    |`6 ms`|The time execution decrease is 83.1%
+|Second Query	      |`22.6 ms`    ||
+|Third Query          |`25.1 ms`    |`3.4 ms`|The time execution decrease is 86.4%
+|Fourth Query         |`260 ms`     |`4 ms`|The time execution decrease is 98.5%
 |Fifth Query	      |`1.9 ms`     |`0.8 ms`| The time execution decrease is 57.9%
-|Sixth Query	      |`4.9 ms`     |`0.9 ms`| The time execution decrease is 81.6%
-|Seventh Query	      |`90 ms`      |`1 ms`| The time execution decrease is 98.9%
-|Eighth Query	      |`16 ms`      |`2 ms`| The time execution decrease is 87.5%
-|Ninth Query          |`162 ms`     |`4 ms`|The time execution decrease is 97.5%
-|Tenth Query          |`30 ms`      |`5.4 ms`|The time execution decrease is 82%
+|Sixth Query	      |`3.6 ms`     |`0.9 ms`| The time execution decrease is 75%
+|Seventh Query	      |`70 ms`      |`1 ms`| The time execution decrease is 98.6%
+|Eighth Query	      |`10 ms`      |`2 ms`| The time execution decrease is 80%
+|Ninth Query          |`162 ms`     |`0.7 ms`|The time execution decrease is 99.6%
+|Tenth Query          |`23.4 ms`     |`0.5 ms`|The time execution decrease is 97.9%
